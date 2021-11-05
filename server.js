@@ -9,7 +9,7 @@ import jwt from'koa-jwt';
 var jwt_obj = require('jsonwebtoken');
 import ClientManager from './lib/ClientManager';
 const AWS = require("aws-sdk");
-
+AWS.config.update({region: 'us-east-1'});
 var DocumentClient = new AWS.DynamoDB.DocumentClient();
 
 var jwt_key;
