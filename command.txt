@@ -1,0 +1,2 @@
+lt --host http://lexsmarthome.com:1234 --port 8000 --jwt jwttoken.txt
+node -r esm bin/server --jwt-shared-secret 2070ba020eead9fdd71d1e8aef7872ae0fdd0b16aec4fbd90acace5b5736dfd1

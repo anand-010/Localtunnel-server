@@ -6,7 +6,7 @@ import http from 'http';
 import { hri } from 'human-readable-ids';
 import Router from 'koa-router';
 import jwt from'koa-jwt';
-
+var jwt_obj = require('jsonwebtoken');
 import ClientManager from './lib/ClientManager';
 var jwt_key;
 const debug = Debug('localtunnel:server');
@@ -117,9 +117,9 @@ export default function(opt) {
         const isNewClientRequest = ctx.query['new'] !== undefined;
         if (isNewClientRequest) {
             try {
-                var decoded = jwt.verify(key_from_header, '2070ba020eead9fdd71d1e8aef7872ae0fdd0b16aec4fbd90acace5b5736dfd1');
+                var decoded = jwt_obj.verify(key_from_header, '2070ba020eead9fdd71d1e8aef7872ae0fdd0b16aec4fbd90acace5b5736dfd1');
                 console.log("decoded", decoded);
-                
+
             } catch(err) {
                 console.log(err);
             }
