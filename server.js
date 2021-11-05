@@ -119,7 +119,14 @@ export default function(opt) {
             try {
                 var decoded = jwt_obj.verify(key_from_header, '2070ba020eead9fdd71d1e8aef7872ae0fdd0b16aec4fbd90acace5b5736dfd1');
                 console.log("decoded", decoded);
+                const reqId = decoded.sub;
+                debug('making new client with id %s', reqId);
+                const info = await manager.newClient(reqId, opt.jwt_shared_secret ? ctx.request.headers.authorization : null);
 
+                const url = schema + '://' + info.id + '.' + ctx.request.host;
+                info.url = url;
+                ctx.body = info;
+                return;
             } catch(err) {
                 console.log(err);
             }
