@@ -130,7 +130,7 @@ export default function(opt) {
                     console.log("not found on database");
                     return;
                   }
-                const reqId = decoded.Item.sub;
+                const reqId = result.Item.sub;
                 debug('making new client with id %s', reqId);
                 const info = await manager.newClient(reqId, opt.jwt_shared_secret ? ctx.request.headers.authorization : null);
 
