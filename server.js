@@ -8,6 +8,10 @@ import Router from 'koa-router';
 import jwt from'koa-jwt';
 var jwt_obj = require('jsonwebtoken');
 import ClientManager from './lib/ClientManager';
+const AWS = require("aws-sdk");
+
+var DocumentClient = new AWS.DynamoDB.DocumentClient();
+
 var jwt_key;
 const debug = Debug('localtunnel:server');
 
@@ -119,7 +123,14 @@ export default function(opt) {
             try {
                 var decoded = jwt_obj.verify(key_from_header, '2070ba020eead9fdd71d1e8aef7872ae0fdd0b16aec4fbd90acace5b5736dfd1');
                 console.log("decoded", decoded);
-                const reqId = decoded.sub;
+                var result = await getToken(decoded.tokenId);
+                console.log("db result, ", result);
+                if (result == undefined || Object.keys(result).length === 0) {
+                    // not registered device
+                    console.log("not found on database");
+                    return;
+                  }
+                const reqId = decoded.Item.sub;
                 debug('making new client with id %s', reqId);
                 const info = await manager.newClient(reqId, opt.jwt_shared_secret ? ctx.request.headers.authorization : null);
 
@@ -233,3 +244,22 @@ export default function(opt) {
 
     return server;
 };
+
+function getToken(tokenId) {
+    return new Promise((resolve, reject) => {
+      var params = {
+        TableName: 'localtunnel',
+        Key: {
+            tokenId
+        }
+      };
+      DocumentClient.get(params, (err, data) => {
+        if (err) {
+          reject(err)
+        }
+        else {
+          resolve(data);
+        }
+      });
+    });
+  }
