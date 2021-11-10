@@ -6,6 +6,7 @@ import http from 'http';
 import { hri } from 'human-readable-ids';
 import Router from 'koa-router';
 import jwt from'koa-jwt';
+
 var jwt_obj = require('jsonwebtoken');
 import ClientManager from './lib/ClientManager';
 const AWS = require("aws-sdk");
@@ -192,6 +193,7 @@ export default function(opt) {
     });
 
     const server = http.createServer();
+    // const io = require('socket.io')(server);
 
     const appCallback = app.callback();
 
